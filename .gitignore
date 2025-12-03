@@ -186,3 +186,7 @@ cython_debug/
 .venv/
 venv/
 env/
+
+
+# Logs
+logs/
