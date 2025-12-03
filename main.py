@@ -10,4 +10,4 @@ if __name__ == '__main__':
 
     logger.debug(f'MEXC FUTURES API is online : {mexc.ping()} ')
 
-    mexc.contract_info()
+    mexc.contract_detail()

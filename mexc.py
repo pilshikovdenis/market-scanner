@@ -62,7 +62,7 @@ def ping() -> bool:
     return result
 
 
-def contract_info() -> RespGetContractInfo | None:
+def contract_detail() -> RespGetContractInfo | None:
     url = f'{FuturesApiPath.BASE}{FuturesApiPath.CONTRACT_DETAIL}'
     logger.debug(url)
     result = None
