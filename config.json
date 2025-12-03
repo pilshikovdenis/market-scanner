@@ -1,0 +1,7 @@
+{
+  "debug": true,
+  "log_dir": "logs",
+  "log_file": "app.log",
+  "console_level": "DEBUG",
+  "file_level": "DEBUG"
+}
