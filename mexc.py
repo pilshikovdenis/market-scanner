@@ -10,6 +10,7 @@ import requests
 from requests.exceptions import HTTPError, ConnectionError, Timeout, RequestException
 
 from logger_conf import setup_logger
+from models.mexcf_models import ContractInfo, RespGetContractInfo
 
 logger = setup_logger()
 
@@ -21,8 +22,9 @@ class FuturesApiPath:
     """
     The class stores paths to API Endpoints
     """
-    BASE = "https://api.mexc.com"
-    PING = "/api/v3/ping"
+    BASE = "https://contract.mexc.com"
+    PING = "/api/v1/contract/ping"
+    CONTRACT_DETAIL = "/api/v1/contract/detail"
 
 
 def handle_exceptions(exception):
@@ -32,13 +34,13 @@ def handle_exceptions(exception):
     :return:
     """
     if isinstance(exception, HTTPError):
-        logger.debug(f"HTTP error: {exception} (status code: {getattr(exception.response, 'status_code', None)})")
+        logger.error(f"HTTP error: {exception} (status code: {getattr(exception.response, 'status_code', None)})")
     elif isinstance(exception, ConnectionError):
-        logger.debug(f"Connection error: {exception}")
+        logger.error(f"Connection error: {exception}")
     elif isinstance(exception, Timeout):
-        logger.debug(f"Timeout error: {exception}")
+        logger.error(f"Timeout error: {exception}")
     elif isinstance(exception, RequestException):
-        logger.debug(f"Common request error: {exception}")
+        logger.error(f"Common request error: {exception}")
 
 
 def ping() -> bool:
@@ -50,12 +52,36 @@ def ping() -> bool:
     logger.debug(url)
     result = False
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=25)
         response.raise_for_status()
     except (HTTPError, ConnectionError, Timeout, RequestException) as e:
         handle_exceptions(e)
     else:
         result = True
+
+    return result
+
+
+def contract_info() -> RespGetContractInfo | None:
+    url = f'{FuturesApiPath.BASE}{FuturesApiPath.CONTRACT_DETAIL}'
+    logger.debug(url)
+    result = None
+    response = None
+    try:
+        response = requests.get(url, timeout=25)
+        response.raise_for_status()
+    except (HTTPError, ConnectionError, Timeout, RequestException) as e:
+        handle_exceptions(e)
+        return result
+
+    try:
+        data = response.json()
+        parsed_response = RespGetContractInfo(**data)
+        for i in parsed_response.data:
+            print(i.symbol)
+
+    except Exception as e:
+        logger.error(f'Validation error {e}')
 
     return result
 
