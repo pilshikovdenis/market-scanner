@@ -10,4 +10,8 @@ if __name__ == '__main__':
 
     logger.debug(f'MEXC FUTURES API is online : {mexc.ping()} ')
 
-    mexc.contract_detail()
+    contract_details = mexc.contract_detail()
+    if not contract_details or not contract_details.data:
+        logger.error(f'No data was received from MEXC')
+    for symbol in contract_details.data:
+        print(symbol.symbol)

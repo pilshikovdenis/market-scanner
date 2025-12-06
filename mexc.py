@@ -64,7 +64,6 @@ def ping() -> bool:
 
 def contract_detail() -> RespGetContractInfo | None:
     url = f'{FuturesApiPath.BASE}{FuturesApiPath.CONTRACT_DETAIL}'
-    logger.debug(url)
     result = None
     response = None
     try:
@@ -76,9 +75,7 @@ def contract_detail() -> RespGetContractInfo | None:
 
     try:
         data = response.json()
-        parsed_response = RespGetContractInfo(**data)
-        for i in parsed_response.data:
-            print(i.symbol)
+        result = RespGetContractInfo(**data)
 
     except Exception as e:
         logger.error(f'Validation error {e}')

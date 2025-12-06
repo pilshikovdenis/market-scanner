@@ -45,6 +45,8 @@ class ContractInfo(BaseModel):
     risk_limit_type: str = Field(alias='riskLimitType')
     max_num_orders: List[int] = Field(alias='maxNumOrders')
     type: int
+    trigger_protect: Decimal = Field(alias='triggerProtect')
+
 
 class RespGetContractInfo(BaseModel):
     success: bool
